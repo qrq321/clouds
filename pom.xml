@@ -7,6 +7,7 @@
         <module>cloud-common</module>
         <module>ming-user</module>
         <module>clouds-gateway</module>
+        <module>clouds-generator</module>
     </modules>
 
     <!--定义父依赖包-->
@@ -105,13 +106,6 @@
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-boot-starter</artifactId>
                 <version>${mybatis-plus.version}</version>
-            </dependency>
-
-            <!-- hibernate validator主版本管理 -->
-            <dependency>
-                <groupId>org.hibernate</groupId>
-                <artifactId>hibernate-validator</artifactId>
-                <version>${hibernate-validator.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
