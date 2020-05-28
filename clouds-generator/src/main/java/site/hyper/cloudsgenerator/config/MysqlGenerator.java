@@ -108,11 +108,11 @@ public class MysqlGenerator {
 
 //		 //配置自定义输出模板
         // 不需要其他的类型时，直接设置为null就不会成对应的模版了
-        templateConfig.setEntity("templates/entity2.java");
-        templateConfig.setController("templates/controller2.java");
-        templateConfig.setMapper("templates/mapper2.java");
+        templateConfig.setEntity("templates/entity.java");
+        templateConfig.setController("templates/controller.java");
+        templateConfig.setMapper("templates/mapper.java");
         templateConfig.setService("templates/service.java");
-        templateConfig.setServiceImpl("templates/serviceImpl2.java");
+        templateConfig.setServiceImpl("templates/serviceImpl.java");
 // 自定义模板配置，可以 copy 源码 mybatis-plus/src/main/resources/templates 下面内容修改，
         // 放置自己项目的 src/main/resources/templates 目录下, 默认名称一下可以不配置，也
         // 可以自定义模板名称 只要放到目录下，名字不变 就会采用这个模版 下面这句有没有无所谓

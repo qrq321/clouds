@@ -1,10 +1,29 @@
+#spring:
+#  cloud:
+#    nacos:
+#      discovery:
+#        register-enabled: true
+#        server-addr: 150.109.54.1:8848 # nancos地址
+#  application:
+#    name: gateWay
+#server:
+#  port: 8081
+
 spring:
+  application:
+    name: gateway
   cloud:
     nacos:
+      config:
+        server-addr: 150.109.54.1:8848
       discovery:
-        register-enabled: true
-        server-addr: 150.109.54.1:8848 # nancos地址
-  application:
-    name: gateWay
-server:
-  port: 8081
+        server-addr: 150.109.54.1:8848
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: test-router
+          uri: lb://mingx-user
+          predicates:
+            - Path=/pay/**

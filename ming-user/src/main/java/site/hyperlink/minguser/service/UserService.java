@@ -9,4 +9,5 @@ import site.hyperlink.minguser.entity.User;
  * @Description: {}
  */
 public interface UserService extends IService<User> {
+
 }

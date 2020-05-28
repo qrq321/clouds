@@ -1,3 +1,5 @@
+server:
+  port: ${random.int[6000,8000]}
 spring:
   application:
     name: mingx-user

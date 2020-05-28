@@ -1,175 +1,168 @@
 package ${package.Controller};
 
-
-    #if(${restControllerStyle})
-    import org.springframework.web.bind.annotation.RequestMethod;
-    import org.springframework.web.bind.annotation.RestController;
-    #else
-    import org.springframework.stereotype.Controller;
-    #end
-    #if(${superControllerClassPackage})
-    import ${superControllerClassPackage};
-    #end
-import com.alibaba.fastjson.JSON;
-import com.dcy.constant.Constant;
-import com.dcy.model.BootStrapTable;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import org.springframework.util.StringUtils;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.GetMapping;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import org.springframework.web.bind.annotation.*;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.chehejia.framework.beans.model.Response;
+import com.chehejia.framework.beans.model.page.PageParam;
+import com.chehejia.framework.beans.model.page.PageResult;
+import org.springframework.util.CollectionUtils;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import ${package.Service}.${table.serviceName};
 import ${package.Entity}.${entity};
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import lombok.Data;
+
+#if(${cfg.restControllerStyle})
+#else
+import org.springframework.stereotype.Controller;
+#end
+#if(${superControllerClassPackage})
+import ${superControllerClassPackage};
+#end
 
 /**
+ * <p>
+ * $!{table.comment} 前端控制器
+ * </p>
  *
  * @author ${author}
  * @since ${date}
  */
-#if(${restControllerStyle})
+#if(${cfg.restControllerStyle})
 @RestController
 #else
 @Controller
 #end
-@RequestMapping("/a#if(${package.ModuleName})/${package.ModuleName}#end/#if(${controllerMappingHyphenStyle})${controllerMappingHyphen}#else${table.entityPath}#end")
+#set($kebabName = $table.name.replace('_','-'))
+@RequestMapping("/${kebabName}")
+#if(${kotlin})
+class ${table.controllerName}#if(${superControllerClass}) : ${superControllerClass}()#end
+
+#else
 #if(${superControllerClass})
 public class ${table.controllerName} extends ${superControllerClass} {
 #else
 public class ${table.controllerName} {
 #end
-private final Logger logger = LoggerFactory.getLogger(${table.controllerName}.class);
 
-@Autowired
-public ${table.serviceName} i${entity}Service;
+    #set($lowerCaseServiceName = $table.serviceName.substring(0,1).toLowerCase() + $table.serviceName.substring(1,$table.serviceName.length()))
 
-/**
- * 跳转列表页面
- * @param request
- * @param model
- * @return
- */
-@RequestMapping(method= RequestMethod.GET,value = {"/${table.entityPath}Index"})
-public String index(HttpServletRequest request, Model model) {
-        return "${table.entityPath}ListIndex";
+    @Autowired
+    private ${table.serviceName} ${lowerCaseServiceName};
+
+    #set($lowrEntity = $table.entityName.substring(0,1).toLowerCase() + $table.entityName.substring(1,$table.entityName.length()))
+
+    /**
+    * 通过id查询
+    */
+    @GetMapping("/get-by-id/{id}")
+    public Response getById(@PathVariable(value = "id") Integer id){
+        return Response.success(${lowerCaseServiceName}.getById(id));
+    }
+
+    /**
+    * 新增
+    */
+    @PostMapping("/save")
+    public Response save(@RequestBody ${table.entityName} ${lowrEntity}){
+        ${lowerCaseServiceName}.save(${lowrEntity});
+        return Response.success();
+    }
+
+    /**
+    * 通过id删除
+    */
+    @DeleteMapping("/delete-by-id/{id}")
+    public Response delete(@PathVariable(value = "id") String ids){
+        String[] idsStrs = ids.split(",");
+        for (String id:idsStrs){
+            ${lowerCaseServiceName}.removeById(Integer.parseInt(id));
         }
+        return Response.success();
+    }
 
-/**
- * 分页查询数据
- *
- * @param bootStrapTable  分页信息
- * @param ${table.entityPath}   查询条件
- * @return
- */
-@ResponseBody
-@GetMapping("/get${entity}PageList")
-public Map<String, Object> get${entity}List(BootStrapTable<${entity}> bootStrapTable,${entity} ${table.entityPath}) {
-        Map<String,Object> result = new HashMap<String,Object>();
-        try {
-        result = bootStrapTable.setRows(i${entity}Service.selectPage(bootStrapTable,${table.entityPath}));
-        } catch (Exception e) {
-        logger.error("get${entity}List -=- {}",e.toString());
-        result.put(Constant.BOOTSTAP_TABLE_ROWS, new ArrayList<>());
-        result.put(Constant.BOOTSTRAP_TABLE_TOTAL, 0);
-        }
-        return result;
-        }
-
-/**
- * 跳转添加页面
- * @param request
- * @param response
- * @param model
- * @return
- */
-@RequestMapping(method=RequestMethod.GET,value="/${table.entityPath}Add")
-public String ${table.entityPath}Add(HttpServletRequest request,HttpServletResponse response,Model model) {
-        try {
+    /**
+    * 修改
+    */
+    @PutMapping("/update")
+    public Response updateById(@RequestBody ${table.entityName} ${lowrEntity}){
+        ${lowerCaseServiceName}.updateById(${lowrEntity});
+        return Response.success();
+    }
 
 
-        }catch (Exception ex){
-        logger.error("${table.entityPath}Add -=- {}",ex.toString());
-        }
-        return "${table.entityPath}Add";
-        }
+    /**
+    * 查询列表
+    */
+    @PostMapping("/list")
+    public Response list(@RequestBody ${table.entityName}ReqVo ${lowrEntity} ){
+    final LambdaQueryWrapper<${table.entityName}> lambda = new QueryWrapper<${table.entityName}>().lambda();
+        this.buildCondition(lambda,${lowrEntity});
+        return Response.success(${lowerCaseServiceName}.list(lambda));
+    }
 
-/**
- * 跳转修改页面
- * @param request
- * @param id  实体ID
- * @return
- */
-@RequestMapping(method=RequestMethod.GET,value="/${table.entityPath}Update")
-public String ${table.entityPath}Update(HttpServletRequest request,Long id) {
-        try {
-    ${entity} ${table.entityPath} = i${entity}Service.selectById(id);
-        request.setAttribute("${table.entityPath}",${table.entityPath});
-        }catch (Exception ex){
-        logger.error("${table.entityPath}Update -=- {}",ex.toString());
-        }
-        return "${table.entityPath}Upd";
-        }
+    /**
+    * 分页查询
+    */
+    @PostMapping("/page")
+    public Response page(@RequestBody PageParam<${table.entityName}ReqVo> pageParam){
+        final ${table.entityName}ReqVo param = pageParam.getParam();
+        final LambdaQueryWrapper<${table.entityName}> lambda = new QueryWrapper<${table.entityName}>().lambda();
+        this.buildCondition(lambda,param);
+        final IPage<${table.entityName}> page = ${lowerCaseServiceName}.page(new Page<>(pageParam.getPageNo(), pageParam.getPageSize()), lambda);
+        PageResult<${table.entityName}> pr = new PageResult();
+        pr.setPageCount(page.getPages());
+        pr.setTotalCount(page.getTotal());
+        pr.setPageNo(new Long(page.getCurrent()).intValue());
+        pr.setPageSize((int) page.getSize());
+        pr.setResults(page.getRecords());
+        return Response.success(pr);
+    }
 
-/**
- * 保存和修改公用的
- * @param ${table.entityPath}  传递的实体
- * @return  0 失败  1 成功
- */
-@ResponseBody
-@RequestMapping(method=RequestMethod.POST,value="/${table.entityPath}Save")
-public int ${table.entityPath}Save(${entity} ${table.entityPath}) {
-        int count = 0;
-        try {
-        count = i${entity}Service.insertOrUpdate(${table.entityPath}) ? 1 : 0;
-        } catch (Exception e) {
-        logger.error("${table.entityPath}Save -=- {}",e.toString());
-        }
-        return count;
-        }
 
-/**
- * 根据id删除对象
- * @param id  实体ID
- * @return 0 失败  1 成功
- */
-@ResponseBody
-@RequestMapping(method= RequestMethod.POST,value="/${table.entityPath}Delete")
-public int ${table.entityPath}Delete(Long id){
-        int count = 0;
-        try {
-        count = i${entity}Service.deleteById(id) ? 1 : 0;
-        }catch (Exception e){
-        logger.error("${table.entityPath}Delete -=- {}",e.toString());
-        }
-        return count;
-        }
-
-/**
- * 批量删除对象
- * @param item 实体集合ID
- * @return  0 失败  1 成功
- */
-@ResponseBody
-@DeleteMapping(method= RequestMethod.POST,value="/${table.entityPath}BatchDelete")
-public int deleteBatchIds(String item){
-        int count = 0;
-        try {
-        List<Long> ids = (List<Long>) JSON.parse(item);
-        count = i${entity}Service.deleteBatchIds(ids) ? 1 : 0;
-        }catch (Exception e){
-        logger.error("${table.entityPath}BatchDelete -=- {}",e.toString());
-        }
-        return count;
+        /**
+        * 构造查询条件
+        * @param lambda
+        * @param param
+        */
+        private void buildCondition(LambdaQueryWrapper<${table.entityName}> lambda, ${table.entityName}ReqVo param){
+#foreach($field in ${table.fields})
+#set($upperFieldName = $field.propertyName.substring(0,1).toUpperCase() + $field.propertyName.substring(1,$field.propertyName.length()))
+#if(${field.propertyType} == 'OffsetDateTime' || ${field.propertyType} == 'DateTime' || ${field.propertyType} == 'Date' )
+            if(!CollectionUtils.isEmpty(param.get${upperFieldName}List())){
+                lambda.ge(${table.entityName}::get${upperFieldName}, param.get${upperFieldName}List().get(0));
+                lambda.le(${table.entityName}::get${upperFieldName}, param.get${upperFieldName}List().get(1));
+            }
+#else
+            if(!StringUtils.isEmpty(param.get${upperFieldName}())){
+                lambda.eq(${table.entityName}::get${upperFieldName}, param.get${upperFieldName}());
+            }
+#end
+#end
+            lambda.orderBy(true,false, ${table.entityName}::getId);
         }
 
 
+        /**
+         * 请求model
+         */
+        @Data
+        @NoArgsConstructor
+        @AllArgsConstructor
+        private static class ${table.entityName}ReqVo extends ${table.entityName} {
+#foreach($field in ${table.fields})
+#if(${field.propertyType} == 'OffsetDateTime' || ${field.propertyType} == 'DateTime' || ${field.propertyType} == 'Date' )
+            private List<String> ${field.propertyName}List; // ${field.comment}起止
+#end
+#end
         }
+
+
+}
+#end
