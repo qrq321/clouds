@@ -1,5 +1,8 @@
 package site.hyperlink.minguser.test;
 
+import common.util.GetName;
+import lombok.Data;
+
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
@@ -8,9 +11,12 @@ import java.util.function.Function;
  * @author: RuiQi
  * @Date: 2020/5/29 8:58
  */
+@Data
 public class Test20200529 {
-    public static void main(String[] args) {
 
+    private String value;
+    public static void main(String[] args) throws NoSuchMethodException {
+        System.out.println(GetName.name(Test20200529::getValue));
         //Function 理解
         Function<Integer, Integer> name = e -> e + 2;
         Function<Integer, Integer> square = e -> e * e;
