@@ -35,7 +35,7 @@ public class MysqlGenerator {
     }
 
     public static void main(String[] args) {
-        String tableName = "base_channel";
+        String tableName = "t_user";
         // 代码生成器
         AutoGenerator mpg = new AutoGenerator();
 
@@ -48,7 +48,6 @@ public class MysqlGenerator {
         gc.setSwagger2(true);
         gc.setFileOverride(true);
         gc.setOpen(false);
-
         gc.setBaseResultMap(true);
         gc.setBaseColumnList(true);
         //gc.setControllerName("SSSSScontroller");
@@ -62,7 +61,7 @@ public class MysqlGenerator {
         // dsc.setSchemaName("public");
         dsc.setDriverName("com.mysql.cj.jdbc.Driver");
         dsc.setUsername("root");
-        dsc.setPassword("root");
+        dsc.setPassword("abc123");
         mpg.setDataSource(dsc);
 
         // 包配置
@@ -101,7 +100,10 @@ public class MysqlGenerator {
         });
 
         cfg.setFileOutConfigList(focList);
+
         mpg.setCfg(cfg);
+
+
 
         // 配置模板
         TemplateConfig templateConfig = new TemplateConfig();
@@ -125,8 +127,8 @@ public class MysqlGenerator {
         StrategyConfig strategy = new StrategyConfig();
         strategy.setNaming(NamingStrategy.underline_to_camel);
         strategy.setColumnNaming(NamingStrategy.underline_to_camel);
-        strategy.setSuperEntityClass("site.hyper.common.model.BaseEntity");
-        strategy.setSuperMapperClass("site.hyper.common.util.IMapper");
+        strategy.setSuperEntityClass("site.hyper.site.hyper.common.model.BaseEntity");
+        strategy.setSuperMapperClass("site.hyper.site.hyper.common.util.IMapper");
         strategy.setEntityLombokModel(false);
 
         //strategy.setRestControllerStyle(false);

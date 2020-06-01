@@ -1,4 +1,4 @@
-package common.util;
+package site.type.cloudscommon.util;
 
 import java.beans.Introspector;
 import java.io.Serializable;

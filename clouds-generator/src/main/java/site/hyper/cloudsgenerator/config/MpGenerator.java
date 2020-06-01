@@ -53,7 +53,7 @@ public class MpGenerator {
         dsc.setUrl("jdbc:mysql://127.0.0.1:3306/hyperlink?useSSL=false&useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8");
         dsc.setDriverName("com.mysql.cj.jdbc.Driver");
         dsc.setUsername("root");
-        dsc.setPassword("root");
+        dsc.setPassword("abc123");
         mpg.setDataSource(dsc);
 
         // 包配置

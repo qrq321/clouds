@@ -1,12 +1,12 @@
-package common.config;
+package site.type.cloudscommon.config;
 
 /**
  * @author: RuiQi
  * @Date: 2020/5/27 14:23
  */
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
 import org.springframework.context.annotation.Profile;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
@@ -42,9 +42,7 @@ public class SwaggerConfig {
                 .title("测试项目标题")
                 .description("接口描述")
                 //联系人实体类
-                .contact(
-                        new Contact("名字", "网址", "邮箱")
-                )
+                .contact(new Contact("名字", "网址", "邮箱"))
                 //版本号
                 .version("1.0.0-SNAPSHOT")
                 .build();

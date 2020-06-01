@@ -4,10 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
     <packaging>pom</packaging>
     <modules>
-        <module>cloud-common</module>
+        <module>clouds-common</module>
         <module>ming-user</module>
         <module>clouds-gateway</module>
         <module>clouds-generator</module>
+        <module>clouds-service</module>
     </modules>
 
     <!--定义父依赖包-->

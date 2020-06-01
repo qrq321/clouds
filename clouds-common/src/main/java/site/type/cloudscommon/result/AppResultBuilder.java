@@ -1,4 +1,4 @@
-package common.result;
+package site.type.cloudscommon.result;
 
 /**
  * @Author: ruiqiqin

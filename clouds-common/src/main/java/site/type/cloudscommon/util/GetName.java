@@ -1,4 +1,5 @@
-package common.util;
+package site.type.cloudscommon.util;
+
 
 import java.util.HashMap;
 import java.util.Map;

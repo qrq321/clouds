@@ -18,7 +18,7 @@
     <dependencies>
         <dependency>
             <groupId>site.hyper</groupId>
-            <artifactId>cloud-common</artifactId>
+            <artifactId>clouds-common</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <!-- mp自动代码生成-->

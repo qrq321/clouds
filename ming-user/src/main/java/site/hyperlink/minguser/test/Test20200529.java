@@ -1,7 +1,7 @@
 package site.hyperlink.minguser.test;
 
-import common.util.GetName;
 import lombok.Data;
+import site.type.cloudscommon.util.GetName;
 
 import java.util.Comparator;
 import java.util.List;
